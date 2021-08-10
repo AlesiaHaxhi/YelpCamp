@@ -1,7 +1,7 @@
 <% layout('layouts/boilerplate') %> 
     <div class="row">
         <div class="col-6 offset-3">
-            <div class="card my-5">
+            <div class="card my-3">
                 <img src="<%= campground.image %> " class="card-img-top" alt="...">
                 <div class="card-body">
                   <h5 class="card-title"><%= campground.title %></h5>
@@ -18,5 +18,15 @@
                     </form>
                 </div>
               </div>
+              <form action="">
+                <div class="mb-3">
+                  <label for="rating">Rating</label>
+                  <input id="rating" type="range">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label" for="body">Review</label>
+                  <textarea class="form-control" name="review[body]" id="body" cols="30" rows="2"></textarea>
+                </div>
+              </form>
         </div>
     </div>
