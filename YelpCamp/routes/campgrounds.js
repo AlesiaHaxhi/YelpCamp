@@ -22,13 +22,15 @@ router.get('/', catchAsync(async (req, res) => {
     res.render('campgrounds/index', { campgrounds })
 }))
 
-router.get('/new', (req,res) => {
+router.get('/new', (req, res) => {
     res.render('campgrounds/new')
 })
 
 router.post('/', validateCampground, catchAsync(async (req, res, next) => {
     const campground = new Campground(req.body.campground);
     await campground.save(); 
+    req.flash('success', 'Successfully added a campground!')
+
     res.redirect(`/campgrounds/${campground._id}`)
 }))
 
