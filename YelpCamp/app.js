@@ -4,6 +4,10 @@ const path = require('path');
 const session = require('express-session');
 const flash = require('connect-flash');
 
+const passport = require('passport');
+const LocalStrategy  = require('passport-local');
+const User = require('./models/user');
+
 const ejsMate = require('ejs-mate')
 const methodOver = require('method-override');
 
@@ -11,8 +15,9 @@ const ExpressError = require('./utils/ExpressError');
 
 const mongoose = require('mongoose');
 
-const campgrounds = require('./routes/campgrounds')
-const reviews = require('./routes/reviews')
+const campgroundRoutes = require('./routes/campgrounds')
+const reviewRoutes = require('./routes/reviews')
+const userRoutes = require('./routes/users')
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
@@ -48,14 +53,29 @@ const sessionConfig = {
 app.use(session(sessionConfig))
 app.use(flash())
 
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new LocalStrategy (User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.get('/fakeruser', async (req, res) => {
+    const user = new User ({email: 'leblancgod@gmail.com', username: 'faker'})
+    const newUser = await User.register(user, '9thingsfakerdoesthatyoudont')
+
+    res.send(newUser)
+})
+
 app.use((req, res, next) => {
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     next();
 })
 
-app.use('/campgrounds', campgrounds)
-app.use('/campgrounds/:id/reviews', reviews)
+app.use('/campgrounds', campgroundRoutes)
+app.use('/campgrounds/:id/reviews', reviewRoutes)
+app.use('/', userRoutes)
 
 app.get('/', (req, res) => {
     res.render('home')
@@ -72,6 +92,6 @@ app.use((err, req, res, next) => {
 
 })
 
-app.listen(6300, () => {
-    console.log('Listening on port 6300');
+app.listen(3000, () => {
+    console.log('Listening on port 3000');
 })
