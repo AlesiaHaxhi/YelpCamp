@@ -23,19 +23,21 @@
               </div>
         </div>
         <div class="col-6 my-3">
-          <h2>Let Us Know What You Think!</h2>
-          <p>Leave a review so we can keep improving.</p>
-          <form action="/campgrounds/<%= campground._id %>/reviews" method="POST" class="mb-3 validated-form" novalidate>
-            <div class="mb-3">
-              <label for="rating" class="form-label">Rating</label>
-              <input type="range" class="form-range" name="review[rating]" min="1" max="5" id="rating">
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="body">Review</label>
-              <textarea class="form-control" name="review[body]" id="body" cols="30" rows="2" required></textarea>
-            </div>
-            <button class="btn btn-success">Submit</button>
-          </form>
+          <% if(currentUser) { %> 
+            <h2>Let Us Know What You Think!</h2>
+            <p>Leave a review so we can keep improving.</p>
+            <form action="/campgrounds/<%= campground._id %>/reviews" method="POST" class="mb-3 validated-form" novalidate>
+              <div class="mb-3">
+                <label for="rating" class="form-label">Rating</label>
+                <input type="range" class="form-range" name="review[rating]" min="1" max="5" id="rating">
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="body">Review</label>
+                <textarea class="form-control" name="review[body]" id="body" cols="30" rows="2" required></textarea>
+              </div>
+              <button class="btn btn-success">Submit</button>
+            </form>
+          <% } %> 
           <% for(let review of campground.reviews){ %> 
             <div class="card mb-3">
               <div class="card-body">
