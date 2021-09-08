@@ -1,5 +1,7 @@
 const express = require('express')
 const router = express.Router();
+const multer = require('multer')
+const upload = multer({ dest: 'posters/'});
 
 const { isLoggedIn, isAuthor, validateCampground } = require('../middleware');
 const campgrounds = require('../controllers/campgrounds');
@@ -7,8 +9,11 @@ const catchAsync = require('../utils/catchAsync');
 
 router.route('/')
     .get(catchAsync(campgrounds.index))
-    .post(validateCampground, isLoggedIn, catchAsync(campgrounds.createNew))
-
+    // .post(validateCampground, isLoggedIn, catchAsync(campgrounds.createNew))
+    .post(upload.array('image'), (req, res) => {
+        console.log(req.body, req.files)
+        res.send('i want posters in my shitty room')
+    })
 router.get('/new', isLoggedIn, campgrounds.getNew)
 
 router.route('/:id')
