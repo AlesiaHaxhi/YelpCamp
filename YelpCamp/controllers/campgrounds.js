@@ -19,17 +19,17 @@ module.exports.createNew = async (req, res) => {
         query: req.body.campground.location,
         limit: 1
     }).send()
-    res.send(response.body.features[0].geometry.coordinates)
 
-    // const campground = new Campground(req.body.campground);
-    // campground.images = req.files.map(f => ({url: f.path, filename: f.filename}))
-    // campground.author = req.user._id;
+     const campground = new Campground(req.body.campground);
+     campground.geometry = response.body.features[0].geometry;
+     campground.images = req.files.map(f => ({url: f.path, filename: f.filename}))
+     campground.author = req.user._id;
     
-    // await campground.save(); 
-    // console.log(campground)
+     await campground.save(); 
+     console.log(campground)
     
-    // req.flash('success', 'Successfully added a campground')
-    // res.redirect(`/campgrounds/${campground._id}`)
+     req.flash('success', 'Successfully added a campground')
+     res.redirect(`/campgrounds/${campground._id}`)
 }
 
 module.exports.showInd = async (req, res) => {
