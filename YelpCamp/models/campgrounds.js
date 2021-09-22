@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Review = require('./reviews')
 const Schema = mongoose.Schema;
+const opts = { toJSON: { virtuals: true } };
 
 // https://res.cloudinary.com/dlkvrtnax/image/upload/w_300/v1631640724/YelpCamp/utlkreurzasxfxizbdki.jpg
 
@@ -39,6 +40,13 @@ const campgroundSchema = new Schema ({
             type: Schema.Types.ObjectId,  ref:'Review'  
         }  
     ]
+}, opts)
+
+campgroundSchema.virtual('properties.popUpCode').get(function() {
+    return `
+    <a href="/campgrounds/${this._id}">${this.title}</a>
+    <p>${this.description.substring(0, 20)}...</p>
+    `;
 })
 
 campgroundSchema.post('findOneAndDelete', async function (doc) {
