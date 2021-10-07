@@ -30,7 +30,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 const MongoStore = require('connect-mongo');
 const { options } = require('joi');
-const dbUrl = 'mongodb://localhost:27017/yelp-camp'
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -53,11 +53,13 @@ app.use(methodOver('_method'))
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(mongoSanitize())
 
+const secret = process.env.SECRET || 'squirrel';
+
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     touchAfter: 24 * 60 * 60,
     crypto: {
-        secret: 'squirrel'
+        secret
     }
 });
 // const store = new MongoStore({
@@ -72,7 +74,7 @@ store.on('error', function(e) {
 const sessionConfig = {
     store,
     name: 'boring',
-    secret: 'thesecretisthatimdissapointedimnotarealsecret',
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
